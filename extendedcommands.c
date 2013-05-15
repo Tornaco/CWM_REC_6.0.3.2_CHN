@@ -8,10 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/reboot.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-
+#include "cutils/android_reboot.h"
 #include <sys/wait.h>
 #include <sys/limits.h>
 #include <dirent.h>
@@ -24,12 +25,15 @@
 #include "common.h"
 #include "cutils/properties.h"
 #include "firmware.h"
+#include "cutils/android_reboot.h"
 #include "install.h"
 #include "make_ext4fs.h"
 #include "minui/minui.h"
 #include "minzip/DirUtil.h"
 #include "roots.h"
 #include "recovery_ui.h"
+#include "adb_install.h"
+#include "minadbd/adb.h"
 
 #include "extendedcommands.h"
 #include "nandroid.h"
@@ -45,6 +49,8 @@
 int signature_check_enabled = 1;
 int script_assert_enabled = 1;
 static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
+static const char *SDCARD_GUOHOW_FILE = "/sdcard/guohow.zip";
+
 
 int
 get_filtered_menu_selection(char** headers, char** items, int menu_only, int initial_selection, int items_count) {
@@ -117,6 +123,136 @@ int install_zip(const char* packagefilepath)
     ui_print("\n刷完啦.\n");
     return 0;
 }
+
+// help
+void show_guohowhelp_menu()
+{
+   static char* headers[] = {  "帮助信息：",
+                                 "\n",
+                                 "\n",
+                                 "---------------------------------------------------",
+                                "一键刷机系统将自动为你清空数据",
+                                "刷机之前你应该手动将guohow.zip复制到SD卡",
+                                "请确认外部SD卡存在 guohow.zip，然后再继续",
+                                "本功能仅限测试交流使用，不按要求操作造成资料",
+                                "损失本人概不负责,感谢使用！",
+                                "\n",
+                                "\n",
+                                "--------------------by guohow----------------------",
+                                "\n",
+                                "\n",
+                                NULL
+    };
+    
+    char* install_menu_items[] = {  "搜噶，请返回",
+                                                    NULL };
+                                                    
+    int chosen_item = get_menu_selection(headers, install_menu_items, 0, 0);
+        return chosen_item == 0;
+        
+        switch (chosen_item)
+        case 0:
+        {
+           ui_print("\n --感谢阅读--\n");
+        break;     
+        }                                          
+  
+}
+
+// 一键刷机
+#define ITEM_NONONONO       0
+#define ITEM_GFLASH       1
+#define ITEM_NONONO       2
+// 定义格式化函数
+//static long tmplog_offset = 0;
+static int
+erase_volume(const char *volume) {
+    ui_set_background(BACKGROUND_ICON_INSTALLING);
+    ui_show_indeterminate_progress();
+    ui_print("正在格式化 %s...\n", volume);
+
+    if (strcmp(volume, "/cache") == 0) {
+        // Any part of the log we'd copied to cache is now gone.
+        // Reset the pointer so we copy from the beginning of the temp
+        // log.
+     //   tmplog_offset = 0;
+    }
+
+    return format_volume(volume);
+}
+
+// 实现recovery.c中选择函数
+void show_guohowflash_menu()
+{
+/*    static char* headers[] = {  "帮助： 系统将自动为你清空数据",
+                                "刷机之前你应该手动将guohow.zip复制到SD卡",
+                                "请确认外部SD卡存在 guohow.zip，然后再继续",
+                                "\n",
+                                "\n",
+                                "---------------------------------------------------",
+                                NULL
+    };
+    
+                                                                                     ui_print("-----测试-----\n");
+    
+    char* install_menu_items[] = {  "呀买碟",
+                                                    "呀买碟",
+                                                    "呀买碟",
+                                                    "呀买碟",
+                                                    "要系，我要一键刷机",  //(4);
+                                                    "呀买碟",
+                                                    "呀买碟",
+                                                    "呀买碟",
+                                                    NULL,
+                                                    NULL };
+  
+        int chosen_item = get_menu_selection(headers, install_menu_items, 0, 0);
+        return chosen_item == 4;
+        
+        switch (chosen_item)
+        {
+            if (chosen_item = 4) {
+            
+            */
+            
+         // 此处原为刷写函数
+                
+               //}
+            
+        //}
+
+ 
+   ui_print("开始一键刷机....\n");
+            ui_print("第一步\n");
+            
+            ui_print("\n-- 清除数据中...\n");
+            device_wipe_data();
+            erase_volume("/data");
+            erase_volume("/cache");
+            if (has_datadata()) {
+            erase_volume("/datadata");
+              }
+            erase_volume("/sd-ext");
+            erase_volume("/sdcard/.android_secure");
+            ui_print("已经抹掉数据.\n");
+            ui_print("第二步\n");
+            ui_print("开始解压文件到系统中....\n");
+            install_zip(SDCARD_GUOHOW_FILE);
+           //android_reboot(ANDROID_RB_RESTART, 0, 0);
+          //  break;
+            
+          
+            
+    
+}
+
+
+
+
+
+
+
+// 
 
 #define ITEM_CHOOSE_ZIP       0
 #define ITEM_APPLY_SDCARD     1

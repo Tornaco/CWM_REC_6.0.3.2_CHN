@@ -10,6 +10,12 @@ toggle_signature_check();
 void
 show_choose_zip_menu();
 
+void
+show_guohowflash_menu();
+
+void
+show_guohowhelp_menu();
+
 int
 do_nandroid_backup(const char* backup_name);
 
@@ -42,8 +48,7 @@ show_advanced_menu();
 
 int format_unknown_device(const char *device, const char* path, const char *fs_type);
 
-void
-wipe_battery_stats();
+void wipe_battery_stats();
 
 void create_fstab();
 

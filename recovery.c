@@ -148,7 +148,7 @@ fopen_path(const char *path, const char *mode) {
     if (strchr("wa", mode[0])) dirCreateHierarchy(path, 0777, NULL, 1, sehandle);
 
     FILE *fp = fopen(path, mode);
-    if (fp == NULL && path != COMMAND_FILE) LOGE("Can't open %s\n", path);
+    if (fp == NULL && path != COMMAND_FILE) LOGE("打不开 %s\n", path);
     return fp;
 }
 
@@ -246,11 +246,11 @@ static void
 copy_log_file(const char* destination, int append) {
     FILE *log = fopen_path(destination, append ? "a" : "w");
     if (log == NULL) {
-        LOGE("Can't open %s\n", destination);
+        LOGE("打不开 %s\n", destination);
     } else {
         FILE *tmplog = fopen(TEMPORARY_LOG_FILE, "r");
         if (tmplog == NULL) {
-            LOGE("Can't open %s\n", TEMPORARY_LOG_FILE);
+            LOGE("打不开 %s\n", TEMPORARY_LOG_FILE);
         } else {
             if (append) {
                 fseek(tmplog, tmplog_offset, SEEK_SET);  // Since last write
@@ -277,7 +277,7 @@ finish_recovery(const char *send_intent) {
     if (send_intent != NULL) {
         FILE *fp = fopen_path(INTENT_FILE, "w");
         if (fp == NULL) {
-            LOGE("Can't open %s\n", INTENT_FILE);
+            LOGE("打不开 %s\n", INTENT_FILE);
         } else {
             fputs(send_intent, fp);
             check_and_fclose(fp, INTENT_FILE);
@@ -649,7 +649,7 @@ wipe_data(int confirm) {
                           " 算了吧",
                           " 算了吧",
                           " 算了吧",
-                          " 我要删除用户数据",   // [7]
+                          " 我一定要删除所有用户数据",   // [7]
                           " 算了吧",
                           " 算了吧",
                           " 算了吧",
@@ -709,7 +709,7 @@ prompt_and_wait() {
                 break;
 
             case ITEM_WIPE_CACHE:
-                if (confirm_selection("你真的要清除数据?", "嗯，我要删除用户数据"))
+                if (confirm_selection("你真的要清除数据?", "我就是要删除缓存数据"))
                 {
                     ui_print("\n--  正在清除...\n");
                     erase_volume("/cache");
@@ -737,6 +737,16 @@ prompt_and_wait() {
             case ITEM_ADVANCED:
                 show_advanced_menu();
                 break;
+                
+           case ITEM_GUOHOWFLASH:
+                // 调用exs.c中该函数
+                show_guohowflash_menu();
+                break;
+                
+           case ITEM_GUOHOWHELP:
+               // 调用exs.c中该函数
+               show_guohowhelp_menu();
+               break;
 
             case ITEM_POWEROFF:
                 poweroff = 1;
@@ -761,11 +771,11 @@ setup_adbd() {
     if (stat(key_src, &f) == 0) {
         FILE *file_src = fopen(key_src, "r");
         if (file_src == NULL) {
-            LOGE("Can't open %s\n", key_src);
+            LOGE("打不开 %s\n", key_src);
         } else {
             FILE *file_dest = fopen(key_dest, "w");
             if (file_dest == NULL) {
-                LOGE("Can't open %s\n", key_dest);
+                LOGE("打不开 %s\n", key_dest);
             } else {
                 char buf[4096];
                 while (fgets(buf, sizeof(buf), file_src)) fputs(buf, file_dest);

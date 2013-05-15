@@ -83,7 +83,11 @@ int device_wipe_data();
 #define ITEM_NANDROID        5
 #define ITEM_PARTITION       6
 #define ITEM_ADVANCED        7
+// 激活关机选项
 #define ITEM_POWEROFF        8
+// 添加一键刷机
+#define ITEM_GUOHOWFLASH        9
+#define ITEM_GUOHOWHELP        10
 
 // Header text to display above the main menu.
 extern char* MENU_HEADERS[];

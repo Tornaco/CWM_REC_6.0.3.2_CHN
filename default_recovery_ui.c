@@ -20,16 +20,19 @@
 #include "common.h"
 #include "extendedcommands.h"
 
-char* MENU_HEADERS[] = { "基于 CWM 中文刷机系统，汉化编译: guohow " };
+char* MENU_HEADERS[] = { "基于CWM_V6.0.3.2的安卓中文刷机/恢复系统"};
 
-char* MENU_ITEMS[] = { "立即重启到android系统",
-                       "从SD卡选择刷机包刷机",
+char* MENU_ITEMS[] = { "立即重启到安卓系统",
+                       "从内存卡选择刷机包刷机",
                        "使用adb sideload模式刷机",
-                       "抹掉data/用户数据",
+                       "抹掉data/全部用户数据",
                        "抹掉cache/缓存数据",
                        "系统备份与恢复",
                        "分区格式化与挂载",
                        "高级选项",
+                       "关闭手机",
+                       "一键刷机(初次使用请看帮助)",
+                       "帮助信息",
                        NULL };
 
 void device_ui_init(UIParameters* ui_parameters) {
