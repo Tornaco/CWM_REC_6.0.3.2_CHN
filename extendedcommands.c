@@ -48,8 +48,11 @@
 
 int signature_check_enabled = 1;
 int script_assert_enabled = 1;
-static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
-static const char *SDCARD_GUOHOW_FILE = "/sdcard/guohow.zip";
+// static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
+static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
+// for Nexus7 only
+static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/guohow.zip";
+// static const char *SDCARD_GUOHOW_FILE = "/sdcard/guohow.zip";
 
 
 int
@@ -127,6 +130,8 @@ int install_zip(const char* packagefilepath)
 // help
 void show_guohowhelp_menu()
 {
+
+   ui_print("\n --感谢阅读--\n");
    static char* headers[] = {   "\n",
                                 ">>>帮助信息<<<",
                                  "\n",
@@ -135,12 +140,12 @@ void show_guohowhelp_menu()
                                 "[一键刷机]：为你清空data/cache数据",
                                 "你应该手动将guohow.zip复制到SD卡",
                                 "确认外部SD卡存在 guohow.zip再操作",
-                                "刷完自动重启，否则请手动重启即可",                             
+                                "刷完自动重启，否则请手动重启",                             
                                  "\n",
                                  "[一键wipe]：某些机器无法正常一键刷机",
                                  "增加本选项，自动为你清数据",
                                 "你也可以使用单独wipe，似乎这样",
-                                "更加简单省力，不会格式化刷机无关设备",                        
+                                "更加简单省力，不格式化刷机无关分区",                        
                                 "\n",
                                 "如果发现bug，微博@guohow反馈",
                                 "\n",
