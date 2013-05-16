@@ -16,6 +16,10 @@ show_guohowflash_menu();
 void
 show_guohowhelp_menu();
 
+
+void
+show_guohowwholewipe_menu();
+
 int
 do_nandroid_backup(const char* backup_name);
 

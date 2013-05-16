@@ -108,7 +108,7 @@ toggle_signature_check()
 
 int install_zip(const char* packagefilepath)
 {
-    ui_print("\n-- 正在安装...: %s\n", packagefilepath);
+    ui_print("\n-- 正在安装  : %s\n", packagefilepath);
     if (device_flash_type() == MTD) {
         set_sdcard_update_bootloader_message();
     }
@@ -127,24 +127,30 @@ int install_zip(const char* packagefilepath)
 // help
 void show_guohowhelp_menu()
 {
-   static char* headers[] = {  "帮助信息：",
+   static char* headers[] = {   "\n",
+                                ">>>帮助信息<<<",
                                  "\n",
+                                 "---------------by guohow-----------------",  
                                  "\n",
-                                 "---------------------------------------------------",
-                                "一键刷机系统将自动为你清空数据",
-                                "刷机之前你应该手动将guohow.zip复制到SD卡",
-                                "请确认外部SD卡存在 guohow.zip，然后再继续",
-                                "本功能仅限测试交流使用，不按要求操作造成资料",
-                                "损失本人概不负责,感谢使用！",
+                                "[一键刷机]：为你清空data/cache数据",
+                                "你应该手动将guohow.zip复制到SD卡",
+                                "确认外部SD卡存在 guohow.zip再操作",
+                                "刷完自动重启，否则请手动重启即可",                             
+                                 "\n",
+                                 "[一键wipe]：某些机器无法正常一键刷机",
+                                 "增加本选项，自动为你清数据",
+                                "你也可以使用单独wipe，似乎这样",
+                                "更加简单省力，不会格式化刷机无关设备",                        
                                 "\n",
+                                "如果发现bug，微博@guohow反馈",
                                 "\n",
-                                "--------------------by guohow----------------------",
+                                "---------------by guohow-----------------",
                                 "\n",
                                 "\n",
                                 NULL
     };
     
-    char* install_menu_items[] = {  "搜噶，请返回",
+    char* install_menu_items[] = {  "----搜噶，请返回----",
                                                     NULL };
                                                     
     int chosen_item = get_menu_selection(headers, install_menu_items, 0, 0);
@@ -169,7 +175,7 @@ static int
 erase_volume(const char *volume) {
     ui_set_background(BACKGROUND_ICON_INSTALLING);
     ui_show_indeterminate_progress();
-    ui_print("正在格式化 %s...\n", volume);
+    ui_print("正在格式化 %s  \n", volume);
 
     if (strcmp(volume, "/cache") == 0) {
         // Any part of the log we'd copied to cache is now gone.
@@ -184,48 +190,12 @@ erase_volume(const char *volume) {
 // 实现recovery.c中选择函数
 void show_guohowflash_menu()
 {
-/*    static char* headers[] = {  "帮助： 系统将自动为你清空数据",
-                                "刷机之前你应该手动将guohow.zip复制到SD卡",
-                                "请确认外部SD卡存在 guohow.zip，然后再继续",
-                                "\n",
-                                "\n",
-                                "---------------------------------------------------",
-                                NULL
-    };
-    
-                                                                                     ui_print("-----测试-----\n");
-    
-    char* install_menu_items[] = {  "呀买碟",
-                                                    "呀买碟",
-                                                    "呀买碟",
-                                                    "呀买碟",
-                                                    "要系，我要一键刷机",  //(4);
-                                                    "呀买碟",
-                                                    "呀买碟",
-                                                    "呀买碟",
-                                                    NULL,
-                                                    NULL };
-  
-        int chosen_item = get_menu_selection(headers, install_menu_items, 0, 0);
-        return chosen_item == 4;
-        
-        switch (chosen_item)
-        {
-            if (chosen_item = 4) {
-            
-            */
-            
-         // 此处原为刷写函数
-                
-               //}
-            
-        //}
+
 
  
-   ui_print("开始一键刷机....\n");
-            ui_print("第一步\n");
-            
-            ui_print("\n-- 清除数据中...\n");
+   ui_print("开始一键刷机 \n");
+            ui_print("第一步>>>\n");
+            ui_print("-- 清除数据中  \n");
             device_wipe_data();
             erase_volume("/data");
             erase_volume("/cache");
@@ -235,16 +205,38 @@ void show_guohowflash_menu()
             erase_volume("/sd-ext");
             erase_volume("/sdcard/.android_secure");
             ui_print("已经抹掉数据.\n");
-            ui_print("第二步\n");
-            ui_print("开始解压文件到系统中....\n");
+            ui_print("第二步>>>\n");
+            ui_print("开始解压文件到系统中 \n");
             install_zip(SDCARD_GUOHOW_FILE);
-           //android_reboot(ANDROID_RB_RESTART, 0, 0);
+            android_reboot(ANDROID_RB_RESTART, 0, 0);
           //  break;
-            
-          
-            
-    
+
 }
+
+// 一键wipe
+void
+show_guohowwholewipe_menu()
+{
+
+            ui_print("开始一键wipe \n");
+            ui_print(">>>\n");
+            ui_print("-- 清除data  \n");
+            device_wipe_data();
+            erase_volume("/data");
+            ui_print(">>>\n");
+            ui_print("-- 清除cache  \n");
+            erase_volume("/cache");
+            if (has_datadata()) {
+            erase_volume("/datadata");
+              }
+            erase_volume("/sd-ext");
+            erase_volume("/sdcard/.android_secure");
+            ui_print("已经抹掉数据\n");
+            ui_print(">>>\n");
+            ui_print("已经清除数据 你可以进行刷机啦！\n");
+           
+}
+
 
 
 
@@ -459,7 +451,7 @@ char* choose_file_menu(const char* directory, const char* fileExtensionOrDirecto
     int total = numDirs + numFiles;
     if (total == 0)
     {
-        ui_print("没找到你说的相关文件啊....\n");
+        ui_print("没找到你说的相关文件啊 \n");
     }
     else
     {
@@ -742,7 +734,7 @@ int confirm_selection(const char* title, const char* confirm)
     if (0 == stat("/sdcard/clockworkmod/.no_confirm", &info))
         return 1;
 
-    char* confirm_headers[]  = {  title, "  这个可不能撤销啊....", "", NULL };
+    char* confirm_headers[]  = {  title, "  这个可不能撤销啊 ", "", NULL };
     int one_confirm = 0 == stat("/sdcard/clockworkmod/.one_confirm", &info);
 #ifdef BOARD_TOUCH_RECOVERY
     one_confirm = 1;
@@ -902,7 +894,7 @@ int format_unknown_device(const char *device, const char* path, const char *fs_t
     if (0 != ensure_path_mounted(path))
     {
         ui_print("挂载失败 %s!\n", path);
-        ui_print("跳过格式化...\n");
+        ui_print("跳过格式化  \n");
         return 0;
     }
 
@@ -1065,7 +1057,7 @@ void show_partition_menu()
                 if (!confirm_selection("format /data and /data/media (/sdcard)", confirm))
                     continue;
                 handle_data_media_format(1);
-                ui_print("格式化/data...\n");
+                ui_print("格式化/data  \n");
                 if (0 != format_volume("/data"))
                     ui_print("格式化 /data!失败\n");
                 else
@@ -1098,7 +1090,7 @@ void show_partition_menu()
 
             if (!confirm_selection(confirm_string, confirm))
                 continue;
-            ui_print("正在努力格式化 %s...\n", v->mount_point);
+            ui_print("正在努力格式化 %s  \n", v->mount_point);
             if (0 != format_volume(v->mount_point))
                 ui_print("格式化失败啦 %s!\n", v->mount_point);
             else
@@ -1409,7 +1401,7 @@ static void partition_sdcard(const char* volume) {
     char cmd[PATH_MAX];
     setenv("SDPATH", sddevice, 1);
     sprintf(cmd, "sdparted -es %s -ss %s -efs ext3 -s", ext_sizes[ext_size], swap_sizes[swap_size]);
-    ui_print("正在分区 SD Card... 请等待...\n");
+    ui_print("正在分区 SD Card   请等待  \n");
     if (0 == __system(cmd))
         ui_print("Done!\n");
     else
@@ -1514,7 +1506,7 @@ void show_advanced_menu()
             case 5:
                 ensure_path_mounted("/system");
                 ensure_path_mounted("/data");
-                ui_print("正在努力修复权限...\n");
+                ui_print("正在努力修复权限  \n");
                 __system("fix_permissions");
                 ui_print("完成啦\n");
                 break;
@@ -1576,7 +1568,7 @@ void create_fstab()
 }
 
 int bml_check_volume(const char *path) {
-    ui_print("正在检查 %s...\n", path);
+    ui_print("正在检查 %s  \n", path);
     ensure_path_unmounted(path);
     if (0 == ensure_path_mounted(path)) {
         ensure_path_unmounted(path);
@@ -1585,11 +1577,11 @@ int bml_check_volume(const char *path) {
     
     Volume *vol = volume_for_path(path);
     if (vol == NULL) {
-        LOGE("Unable process volume! Skipping...\n");
+        LOGE("Unable process volume! Skipping  \n");
         return 0;
     }
     
-    ui_print("%s may be rfs. 正在检查...\n", path);
+    ui_print("%s may be rfs. 正在检查  \n", path);
     char tmp[PATH_MAX];
     sprintf(tmp, "mount -t rfs %s %s", vol->device, path);
     int ret = __system(tmp);
@@ -1610,7 +1602,7 @@ void process_volumes() {
     if (device_flash_type() != BML)
         return;
 
-    ui_print("检查ext4分区...\n");
+    ui_print("检查ext4分区  \n");
     int ret = 0;
     ret = bml_check_volume("/system");
     ret |= bml_check_volume("/data");
@@ -1635,7 +1627,7 @@ void process_volumes() {
     ui_print("文件系统必须转换为ext4格式.\n");
     ui_print("即将开始进行备份/恢复.\n");
     ui_print("如果发生了意外，你的文件将被命名为\n");
-    ui_print("- %s. 尝试恢复...\n", backup_name);
+    ui_print("- %s. 尝试恢复  \n", backup_name);
     ui_print("省的造成损失啥的.\n");
 
     nandroid_backup(backup_path);

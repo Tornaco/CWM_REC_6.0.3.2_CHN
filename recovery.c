@@ -107,7 +107,7 @@ extern UIParameters ui_parameters;    // from ui.c
  * 1. main system downloads OTA package to /cache/some-filename.zip
  * 2. main system writes "--update_package=/cache/some-filename.zip"
  * 3. main system reboots into recovery
- * 4. get_args() writes BCB with "boot-recovery" and "--update_package=..."
+ * 4. get_args() writes BCB with "boot-recovery" and "--update_package= "
  *    -- after this, rebooting will attempt to reinstall the update --
  * 5. install_package() attempts to install the update
  *    NOTE: the package install must itself be restartable from any point
@@ -273,7 +273,7 @@ copy_log_file(const char* destination, int append) {
 // this function is idempotent: call it as many times as you like.
 static void
 finish_recovery(const char *send_intent) {
-    // By this point, we're ready to return to the main system...
+    // By this point, we're ready to return to the main system 
     if (send_intent != NULL) {
         FILE *fp = fopen_path(INTENT_FILE, "w");
         if (fp == NULL) {
@@ -307,7 +307,7 @@ static int
 erase_volume(const char *volume) {
     ui_set_background(BACKGROUND_ICON_INSTALLING);
     ui_show_indeterminate_progress();
-    ui_print("正在格式化 %s...\n", volume);
+    ui_print("正在格式化 %s \n", volume);
 
     if (strcmp(volume, "/cache") == 0) {
         // Any part of the log we'd copied to cache is now gone.
@@ -602,7 +602,7 @@ update_directory(const char* path, const char* unmount_when_done) {
             strlcat(new_path, "/", PATH_MAX);
             strlcat(new_path, item, PATH_MAX);
 
-            ui_print("\n-- 安装l %s ...\n", path);
+            ui_print("\n-- 安装l %s  \n", path);
             set_sdcard_update_bootloader_message();
             char* copy = copy_sideloaded_package(new_path);
             if (unmount_when_done != NULL) {
@@ -636,23 +636,23 @@ wipe_data(int confirm) {
 
         if (title_headers == NULL) {
             char* headers[] = { "你真的要清除数据?",
-                                "  这个操作可是不允许撤销的啊....",
+                                "  这个操作可是不允许撤销的啊 ",
                                 "",
                                 NULL };
             title_headers = prepend_title((const char**)headers);
         }
 
-        char* items[] = { " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
-                          " 我一定要删除所有用户数据",   // [7]
-                          " 算了吧",
-                          " 算了吧",
-                          " 算了吧",
+        char* items[] = { "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  我一定要删除所有用户数据",   // [7]
+                          "  呀买碟",
+                          "  呀买碟",
+                          "  呀买碟",
                           NULL };
 
         int chosen_item = get_menu_selection(title_headers, items, 1, 0);
@@ -661,7 +661,7 @@ wipe_data(int confirm) {
         }
     }
 
-    ui_print("\n-- 清除数据中...\n");
+    ui_print("\n-- 清除数据中 \n");
     device_wipe_data();
     erase_volume("/data");
     erase_volume("/cache");
@@ -670,7 +670,7 @@ wipe_data(int confirm) {
     }
     erase_volume("/sd-ext");
     erase_volume("/sdcard/.android_secure");
-    ui_print("已经抹掉数据.\n");
+    ui_print("已经抹掉数据\n");
 }
 
 int ui_menu_level = 1;
@@ -711,9 +711,9 @@ prompt_and_wait() {
             case ITEM_WIPE_CACHE:
                 if (confirm_selection("你真的要清除数据?", "我就是要删除缓存数据"))
                 {
-                    ui_print("\n--  正在清除...\n");
+                    ui_print("\n--  正在清除 \n");
                     erase_volume("/cache");
-                    ui_print("已经成功清除.\n");
+                    ui_print("已经成功清除\n");
                     if (!ui_text_visible()) return;
                 }
                 break;
@@ -741,6 +741,11 @@ prompt_and_wait() {
            case ITEM_GUOHOWFLASH:
                 // 调用exs.c中该函数
                 show_guohowflash_menu();
+                break;
+                
+                 case ITEM_GUOHOWWHOLEWIPE:
+                // 调用exs.c中该函数
+                show_guohowwholewipe_menu();
                 break;
                 
            case ITEM_GUOHOWHELP:
@@ -852,7 +857,7 @@ main(int argc, char **argv) {
     int is_user_initiated_recovery = 0;
     time_t start = time(NULL);
 
-    // If these fail, there's not really anywhere to complain...
+    // If these fail, there's not really anywhere to complain 
     freopen(TEMPORARY_LOG_FILE, "a", stdout); setbuf(stdout, NULL);
     freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
     printf("Starting recovery on %s", ctime(&start));
@@ -953,7 +958,7 @@ main(int argc, char **argv) {
             ui_set_show_text(0);
         }
     } else {
-        LOGI("Checking for extendedcommand...\n");
+        LOGI("Checking for extendedcommand \n");
         status = INSTALL_ERROR;  // No command specified
         // we are starting up in user initiated recovery here
         // let's set up some default options
@@ -964,7 +969,7 @@ main(int argc, char **argv) {
         ui_set_background(BACKGROUND_ICON_CLOCKWORK);
         
         if (extendedcommand_file_exists()) {
-            LOGI("Running extendedcommand...\n");
+            LOGI("Running extendedcommand \n");
             int ret;
             if (0 == (ret = run_and_remove_extendedcommand())) {
                 status = INSTALL_SUCCESS;
@@ -974,7 +979,7 @@ main(int argc, char **argv) {
                 handle_failure(ret);
             }
         } else {
-            LOGI("Skipping execution of extendedcommand, file not found...\n");
+            LOGI("Skipping execution of extendedcommand, file not found \n");
         }
     }
 
@@ -993,16 +998,16 @@ main(int argc, char **argv) {
     // If there is a radio image pending, reboot now to install it.
     maybe_install_firmware_update(send_intent);
 
-    // Otherwise, get ready to boot the main system...
+    // Otherwise, get ready to boot the main system 
     finish_recovery(send_intent);
 
     sync();
     if(!poweroff) {
-        ui_print("重启中...\n");
+        ui_print("重启中 \n");
         android_reboot(ANDROID_RB_RESTART, 0, 0);
     }
     else {
-        ui_print("关机中...\n");
+        ui_print("关机中 \n");
         android_reboot(ANDROID_RB_POWEROFF, 0, 0);
     }
     return EXIT_SUCCESS;
