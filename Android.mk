@@ -29,11 +29,11 @@ LOCAL_MODULE := recovery
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 
 ifdef I_AM_KOUSH
-RECOVERY_NAME := -------author guohow-------
+RECOVERY_NAME := -------Auther：guohow_bpok-------
 LOCAL_CFLAGS += -DI_AM_KOUSH
 else
 ifndef RECOVERY_NAME
-RECOVERY_NAME := -------author guohow-------
+RECOVERY_NAME := -------Author: guohow_bpok-------
 endif
 endif
 
