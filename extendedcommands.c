@@ -49,10 +49,10 @@
 int signature_check_enabled = 1;
 int script_assert_enabled = 1;
 // static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
-static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
+// static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
 // for Nexus7 only
-static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/guohow.zip";
-// static const char *SDCARD_GUOHOW_FILE = "/sdcard/guohow.zip";
+// static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/flash.zip";
+// static const char *SDCARD_GUOHOW_FILE = "/sdcard/flash.zip";
 
 
 int
@@ -138,14 +138,15 @@ void show_guohowhelp_menu()
                                  "---------------by guohow-----------------",  
                                  "\n",
                                 "[一键刷机]：为你清空data/cache数据",
-                                "你应该手动将guohow.zip复制到SD卡",
-                                "确认外部SD卡存在 guohow.zip再操作",
+								"自动刷SD卡根目录flash.zip并重启机器",
+                                "请手动将flash.zip复制到SD卡",
+                                "确认外部SD卡存在 flash.zip再操作",
                                 "刷完自动重启，否则请手动重启",                             
-                                 "\n",
-                                 "[一键wipe]：某些机器无法正常一键刷机",
-                                 "增加本选项，自动为你清数据",
-                                "你也可以使用单独wipe，似乎这样",
-                                "更加简单省力，不格式化刷机无关分区",                        
+                                "\n",
+                                "[一键wipe]：自动清除刷机需要清除",
+                                "的数据，安全有效，节省时间",
+                                "使用前注意备份通讯录神马的",
+                                "本功能不格式化SD分区",                        
                                 "\n",
                                 "如果发现bug，微博@guohow反馈",
                                 "\n",
@@ -164,7 +165,7 @@ void show_guohowhelp_menu()
         switch (chosen_item)
         case 0:
         {
-           ui_print("\n --感谢阅读--\n");
+           ui_print("\n --感谢使用--\n");
         break;     
         }                                          
   
@@ -720,7 +721,7 @@ void show_mount_usb_storage_menu()
                                 NULL
     };
 
-    static char* list[] = { "Unmount", NULL };
+    static char* list[] = { "取消挂载", NULL };
 
     for (;;)
     {
@@ -745,7 +746,7 @@ int confirm_selection(const char* title, const char* confirm)
     one_confirm = 1;
 #endif 
     if (one_confirm) {
-        char* items[] = { "No",
+        char* items[] = { "不要",
                         confirm, //" Yes -- wipe partition",   // [1]
                         NULL };
         int chosen_item = get_menu_selection(confirm_headers, items, 0, 0);
@@ -1000,20 +1001,21 @@ void show_partition_menu()
 
     for (i = 0; i < num_volumes; ++i) {
         Volume* v = &device_volumes[i];
+		// guohow : not sure about the translation?
         if(strcmp("ramdisk", v->fs_type) != 0 && strcmp("mtd", v->fs_type) != 0 && strcmp("emmc", v->fs_type) != 0 && strcmp("bml", v->fs_type) != 0) {
-            sprintf(&mount_menu[mountable_volumes].mount, "mount %s", v->mount_point);
-            sprintf(&mount_menu[mountable_volumes].unmount, "unmount %s", v->mount_point);
+            sprintf(&mount_menu[mountable_volumes].mount, "挂载 %s", v->mount_point);
+            sprintf(&mount_menu[mountable_volumes].unmount, "取消挂载 %s", v->mount_point);
             mount_menu[mountable_volumes].v = &device_volumes[i];
             ++mountable_volumes;
             if (is_safe_to_format(v->mount_point)) {
-                sprintf(&format_menu[formatable_volumes].txt, "format %s", v->mount_point);
+                sprintf(&format_menu[formatable_volumes].txt, "格式化 %s", v->mount_point);
                 format_menu[formatable_volumes].v = &device_volumes[i];
                 ++formatable_volumes;
             }
         }
         else if (strcmp("ramdisk", v->fs_type) != 0 && strcmp("mtd", v->fs_type) == 0 && is_safe_to_format(v->mount_point))
         {
-            sprintf(&format_menu[formatable_volumes].txt, "format %s", v->mount_point);
+            sprintf(&format_menu[formatable_volumes].txt, "格式化 %s", v->mount_point);
             format_menu[formatable_volumes].v = &device_volumes[i];
             ++formatable_volumes;
         }
@@ -1043,11 +1045,12 @@ void show_partition_menu()
         }
 
         if (!is_data_media()) {
-          options[mountable_volumes + formatable_volumes] = "mount USB storage";
+		// guohow : not sure too
+          options[mountable_volumes + formatable_volumes] = "开启U盘模式";
           options[mountable_volumes + formatable_volumes + 1] = NULL;
         }
         else {
-          options[mountable_volumes + formatable_volumes] = "format /data and /data/media (/sdcard)";
+          options[mountable_volumes + formatable_volumes] = "格式化 /data 和 /data/media (/sdcard)";
           options[mountable_volumes + formatable_volumes + 1] = NULL;
         }
 
@@ -1059,7 +1062,7 @@ void show_partition_menu()
                 show_mount_usb_storage_menu();
             }
             else {
-                if (!confirm_selection("format /data and /data/media (/sdcard)", confirm))
+                if (!confirm_selection("格式化 /data 和 /data/media (/sdcard)", confirm))
                     continue;
                 handle_data_media_format(1);
                 ui_print("格式化/data  \n");
