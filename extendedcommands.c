@@ -48,11 +48,12 @@
 
 int signature_check_enabled = 1;
 int script_assert_enabled = 1;
-// static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
+// guohow : add your path !!! before compile
+static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
 // static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
 // for Nexus7 only
 // static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/flash.zip";
-// static const char *SDCARD_GUOHOW_FILE = "/sdcard/flash.zip";
+static const char *SDCARD_GUOHOW_FILE = "/sdcard/flash.zip";
 
 
 int

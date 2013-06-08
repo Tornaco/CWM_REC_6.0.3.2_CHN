@@ -20,7 +20,8 @@
 #include "common.h"
 #include "extendedcommands.h"
 
-char* MENU_HEADERS[] = { "[DEVICE_NAME]-CWM_V6.0.3.2中文刷机系统"};
+// based on V6.0.3.2
+char* MENU_HEADERS[] = { "[ZTE-U817]-CWM-中文刷机系统"};
 
 char* MENU_ITEMS[] = { "立即重启到android系统",
                        "从内存卡选择刷机包刷入",
