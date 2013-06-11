@@ -48,11 +48,15 @@
 
 int signature_check_enabled = 1;
 int script_assert_enabled = 1;
+
+// 编译之前需要确定自己的路径
 // static const char *SDCARD_UPDATE_FILE = "/sdcard/update.zip";
-// static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
-// for Nexus7 only
-// static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/flash.zip";
 // static const char *SDCARD_GUOHOW_FILE = "/sdcard/flash.zip";
+
+// for Nexus7 only
+// static const char *SDCARD_UPDATE_FILE = "/sdcard/0/update.zip";
+// static const char *SDCARD_GUOHOW_FILE = "/sdcard/0/flash.zip";
+
 
 
 int
@@ -214,8 +218,9 @@ void show_guohowflash_menu()
             ui_print("第二步>>>\n");
             ui_print("开始解压文件到系统中 \n");
             install_zip(SDCARD_GUOHOW_FILE);
+            //重新启动
             android_reboot(ANDROID_RB_RESTART, 0, 0);
-          //  break;
+            //  break;
 
 }
 
