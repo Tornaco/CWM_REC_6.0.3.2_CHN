@@ -92,6 +92,9 @@ int device_wipe_data();
 // 帮助
 #define ITEM_GUOHOWHELP        11
 
+// 帮助
+#define ITEM_GUOHOWABOUT        12
+
 // Header text to display above the main menu.
 extern char* MENU_HEADERS[];
 

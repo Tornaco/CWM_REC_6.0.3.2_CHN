@@ -16,6 +16,9 @@ show_guohowflash_menu();
 void
 show_guohowhelp_menu();
 
+void
+show_guohowabout_menu();
+
 
 void
 show_guohowwholewipe_menu();

@@ -172,6 +172,48 @@ void show_guohowhelp_menu()
   
 }
 
+
+// about
+void show_guohowabout_menu()
+{
+
+   ui_print("\n --感谢阅读--\n");
+   static char* headers[] = {   "\n",
+                                ">>>声明与须知<<<",
+                                 "\n",
+                                 "\n",
+                                "本软件recovery」基于Cyanogenmod",
+				"公开发布的CWM源代码为基础修改",
+                                "一切都以测试为主，故禁止非法用途",
+                                "所有代码的均为开放代码，不会涉及",
+                                "其他任何权益，但是对于您使用过程",     
+                                "造成的其他任何问题，均为个人问题",
+                                "与本团队无关，请谨慎操作使用！！",                     
+                                "\n",
+                                "如果发现bug，微博@guohow反馈",
+                                "或者邮电，1163397166@qq.com",
+                                "相关代码在HyperToxic@github可见",
+                                "\n",
+                                "\n",
+                                NULL
+    };
+    
+    char* install_menu_items[] = {  "----好的，请返回----",
+                                                    NULL };
+                                                    
+    int chosen_item = get_menu_selection(headers, install_menu_items, 0, 0);
+        return chosen_item == 0;
+        
+        switch (chosen_item)
+        case 0:
+        {
+           ui_print("\n --感谢使用--\n");
+        break;     
+        }                                          
+  
+}
+
+
 // 一键刷机
 #define ITEM_NONONONO       0
 #define ITEM_GFLASH       1

@@ -21,7 +21,7 @@
 #include "extendedcommands.h"
 
 // based on V6.0.3.2
-char* MENU_HEADERS[] = { "[ZTE-U817]-CWM-中文刷机系统"};
+char* MENU_HEADERS[] = { "[MOTO-DEFY]-CWM-中文刷机系统"};
 
 char* MENU_ITEMS[] = { "立即重启到android系统",
                        "从内存卡选择刷机包刷入",
@@ -34,7 +34,8 @@ char* MENU_ITEMS[] = { "立即重启到android系统",
                        "立即关机",
                        "一键wipe",
                        "一键刷机",
-                       "新手看帮助",
+                       "使用教程",
+		       "声明与须知",
                        NULL };
 
 void device_ui_init(UIParameters* ui_parameters) {

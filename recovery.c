@@ -743,7 +743,7 @@ prompt_and_wait() {
                 show_guohowflash_menu();
                 break;
                 
-                 case ITEM_GUOHOWWHOLEWIPE:
+           case ITEM_GUOHOWWHOLEWIPE:
                 // 调用exs.c中该函数
                 show_guohowwholewipe_menu();
                 break;
@@ -751,6 +751,11 @@ prompt_and_wait() {
            case ITEM_GUOHOWHELP:
                // 调用exs.c中该函数
                show_guohowhelp_menu();
+               break;
+
+	case ITEM_GUOHOWABOUT:
+               // 调用exs.c中该函数
+               show_guohowabout_menu();
                break;
 
             case ITEM_POWEROFF:
